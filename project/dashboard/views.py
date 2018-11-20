@@ -7,6 +7,10 @@ dashboard_blueprint =   Blueprint(
     template_folder='templates'
 )
 
-@dashboard_blueprint.route("/")
-def hello():
-    return "Dashboards will be here!"
+@dashboard_blueprint.route("/sample1")
+def sample1():
+    return render_template('dashboard/index.html')
+
+@dashboard_blueprint.route("/sample2")
+def sample2():
+    return render_template('dashboard/dashboard2.html')

@@ -7,47 +7,47 @@
     <title>HCP Digital Insights</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/hcpdigital.css') }}">
+    <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/hcpdigital.css') }}">-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
   </head>
   <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-      <div class="container">
-        <a class="navbar-brand" href="#">
-          <img src="http://placehold.it/300x60?text=Logo" width="150" height="30" alt="">
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Services</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
-            </li>
-          </ul>
-        </div>
+    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+      <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#"><img src="{{ url_for('static', filename='images/HCP-Digital-Insights_Logo.png')}}" height="47px"></a>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Settings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Help</a>
+          </li>
+        </ul>
       </div>
     </nav>
     <!-- Page Content -->
-    <div class="container">
-      <h1 class="mt-5">Logo Nav by Start Bootstrap</h1>
       {%block content%}
       {%endblock%}
-    </div>
 <!-- /.container -->
+<!--
   <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
   <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+  -->
+  <script src="{{ url_for('static', filename='js/jquery-3.1.1.slim.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/tether.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="{{ url_for('static', filename='js/ie10-viewport-bug-workaround.js')}}"></script>
   
   </body>
 </html>
