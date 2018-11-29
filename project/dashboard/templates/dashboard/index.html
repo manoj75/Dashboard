@@ -1,153 +1,927 @@
 {% extends 'base.html' %}
 {% block content %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/d3.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/crossfilter.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/dc.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/reductio.min.js') }}"></script>
+
+
+<style>
+  /* Adding gvnix styles css - NO COPIAR */
+  @import 'http://geo-gvnix.rhcloud.com/resources/styles/standard.css';
+ /* Custom fixed navs */
+
+   header.navbar+nav.navbar{
+   /* margin-top: 20px;same margin-bottom .navbar */
+   }
+   .navbar.navbar-default.navbar-fixed-top{
+   margin-top: 50px;
+   }
+   .sidebar.navbar-fixed-top{
+    margin-top: 100px;
+   }
+
+   @media (min-width: 768px) and (max-width: 998px){
+       .navbar.navbar-default.navbar-fixed-top{
+       margin-top: 100px;
+       }
+       .sidebar.navbar-fixed-top{
+        margin-top: 150px;
+       }
+    }
+
+  /* Custom navbar default: global*/
+
+  .navbar.navbar-default{
+    background-color: #f8f8f8;
+    border-color: #e7e7e7;
+    margin: 0;
+    border-radius: 0;
+  }
+  .navbar.navbar-default .navbar-brand {
+    color: #666;
+    text-shadow: none;
+    min-width: 150px;
+    }
+   .navbar.navbar-default .navbar-nav > li > a {
+    color: #666;
+    text-shadow: none;
+    }
+    .navbar.navbar-default .navbar-nav > li > a {
+    color: #666;
+    text-shadow: none;
+    }
+    .navbar.navbar-default .navbar-nav > li > a:hover{
+    color: #acc47f;
+    }
+    .navbar.navbar-default .navbar-nav > .active > a{
+    color: #fff;
+    background-color: #acc47f;
+    }
+    .navbar.navbar-default .navbar-nav > .active > a:hover{
+    color: #608224;
+    background-color: #acc47f;
+    }
+    .navbar.navbar-default .caret {
+    border-top-color: #ccc;
+    border-bottom-color: #ccc;
+    }
+    .navbar.navbar-default .caret:hover {
+    border-top-color: #333;
+    border-bottom-color: #333;
+    }
+
+
+/* Custom sidebar menu */
+
+ /*Remove rounded coners*/
+
+  nav.sidebar.navbar {
+    border-radius: 0px;
+  }
+
+  nav.sidebar, .main{
+    -webkit-transition: margin 200ms ease-out;
+      -moz-transition: margin 200ms ease-out;
+      -o-transition: margin 200ms ease-out;
+      transition: margin 200ms ease-out;
+  }
+
+  /* Add gap to nav and right windows.*/
+  .main{
+    padding: 10px 10px 0 10px;
+  }
+
+  /* .....NavBar: Icon only with coloring/layout.....*/
+
+  /*small/medium side display*/
+  @media (min-width: 768px) {
+
+    /*Allow main to be next to Nav*/
+    .main{
+      position: absolute;
+      width: calc(100% - 40px); /*keeps 100% minus nav size*/
+      margin-left: 40px;
+      float: right;
+    }
+
+    /*lets nav bar to be showed on mouseover*/
+    nav.sidebar:hover + .main{
+      margin-left: 200px;
+    }
+
+    /*Center Brand*/
+    nav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+      margin-left: 0px;
+    }
+    /*Center Brand*/
+    nav.sidebar .navbar-brand, nav.sidebar .navbar-header{
+      text-align: center;
+      width: 100%;
+      margin-left: 0px;
+    }
+
+    /*Center Icons*/
+    nav.sidebar a{
+      padding-right: 13px;
+            min-width: 100px;
+    }
+
+    /*custom sidebar nav*/
+        nav.sidebar ul.nav.navbar-nav{
+            margin: 0;
+        }
+        nav.sidebar.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+            color: white;
+        }
+
+    /*adds border top to first nav box */
+    nav.sidebar .navbar-nav > li:first-child{
+      border-top: 1px #e5e5e5 solid;
+    }
+
+    /*adds border to bottom nav boxes*/
+    nav.sidebar .navbar-nav > li{
+      border-bottom: 1px #e5e5e5 solid;
+    }
+    /*adds background on hover*/
+    nav.sidebar .navbar-nav > li:hover{
+        color: #fff;
+            background-color: #43600E;
+    }
+    /*removes border last element*/
+    nav.sidebar .navbar-nav > li.last{
+      border-bottom: none;
+    }
+
+    /* Colors/style dropdown box*/
+    nav.sidebar .navbar-nav .open .dropdown-menu {
+      position: static;
+      float: none;
+      width: auto;
+      margin-top: 0;
+      background-color: transparent;
+      border: 0;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+    }
+
+    /*allows nav box to use 100% width*/
+    nav.sidebar .navbar-collapse, nav.sidebar .container-fluid{
+      padding: 0 0px 0 0px;
+    }
+
+    /*colors dropdown box text */
+    .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+      color: #777;
+    }
+
+/*O quanto o menu irá esconder á esquerda*/
+    /*gives sidebar width/height*/
+    nav.sidebar{
+      width: 200px;
+      height: 100%;
+      margin-left: -270px;
+      float: left;
+      z-index: 8000;
+      margin-bottom: 0px;
+    }
+
+    /*give sidebar 100% width;*/
+    nav.sidebar li {
+      width: 100%;
+    }
+
+    /* Move nav to full on mouse over*/
+    nav.sidebar:hover{
+      margin-left: 0px;
+    }
+    /*for hiden things when navbar hidden*/
+    .forAnimate{
+      opacity: 0;
+    }
+  }
+
+  /* .....NavBar: Fully showing nav bar..... */
+
+  @media (min-width: 1330px) {
+
+/*     Allow main to be next to Nav
+    .main{
+      width: calc(100% - 200px); keeps 100% minus nav size
+      margin-left: 200px;
+    }
+
+    Show all nav
+    nav.sidebar{
+      margin-left: 0px;
+      float: left;
+    }
+    Show hidden items on nav
+    nav.sidebar .forAnimate{
+      opacity: 1;
+    } */
+  }
+
+  nav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {
+    color: #CCC;
+    background-color: transparent;
+  }
+
+  nav:hover .forAnimate{
+    opacity: 1;
+  }
+  
+  
+  /*---- FIM SLIDE MENU*/
+  
+  .nav-side-menu {
+  overflow: auto;
+  font-family: verdana;
+  font-size: 12px;
+  font-weight: 200;
+  background-color: #2e353d;
+  position: fixed;
+  top: 71px;
+  width: 300px;
+  height: 100%;
+  color: #e1ffff;
+}
+.nav-side-menu .brand {
+  background-color: #23282e;
+  line-height: 50px;
+  display: block;
+  text-align: center;
+  font-size: 14px;
+}
+.nav-side-menu .toggle-btn {
+  display: none;
+}
+.nav-side-menu ul,
+.nav-side-menu li {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  line-height: 35px;
+  cursor: pointer;
+  /*    
+    .collapsed{
+       .arrow:before{
+                 font-family: FontAwesome;
+                 content: "\f053";
+                 display: inline-block;
+                 padding-left:10px;
+                 padding-right: 10px;
+                 vertical-align: middle;
+                 float:right;
+            }
+     }
+*/
+}
+.nav-side-menu ul :not(collapsed) .arrow:before,
+.nav-side-menu li :not(collapsed) .arrow:before {
+  font-family: FontAwesome;
+  content: "\f078";
+  display: inline-block;
+  padding-left: 10px;
+  padding-right: 10px;
+  vertical-align: middle;
+  float: right;
+}
+.nav-side-menu ul .active,
+.nav-side-menu li .active {
+  border-left: 3px solid #d19b3d;
+  background-color: #4f5b69;
+}
+.nav-side-menu ul .sub-menu li.active,
+.nav-side-menu li .sub-menu li.active {
+  color: #d19b3d;
+}
+.nav-side-menu ul .sub-menu li.active a,
+.nav-side-menu li .sub-menu li.active a {
+  color: #d19b3d;
+}
+.nav-side-menu ul .sub-menu li,
+.nav-side-menu li .sub-menu li {
+  background-color: #181c20;
+  border: none;
+  line-height: 28px;
+  border-bottom: 1px solid #23282e;
+  margin-left: 0px;
+}
+.nav-side-menu ul .sub-menu li:hover,
+.nav-side-menu li .sub-menu li:hover {
+  background-color: #020203;
+}
+.nav-side-menu ul .sub-menu li:before,
+.nav-side-menu li .sub-menu li:before {
+  font-family: FontAwesome;
+  content: "\f105";
+  display: inline-block;
+  padding-left: 10px;
+  padding-right: 10px;
+  vertical-align: middle;
+}
+.nav-side-menu li {
+  padding-left: 0px;
+  border-left: 3px solid #2e353d;
+  border-bottom: 1px solid #23282e;
+}
+.nav-side-menu li a {
+  text-decoration: none;
+  color: #e1ffff;
+}
+.nav-side-menu li a i {
+  padding-left: 10px;
+  width: 20px;
+  padding-right: 20px;
+}
+.nav-side-menu li:hover {
+  border-left: 3px solid #d19b3d;
+  background-color: #4f5b69;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  transition: all 1s ease;
+}
+@media (max-width: 767px) {
+  .nav-side-menu {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .nav-side-menu .toggle-btn {
+    display: block;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 10 !important;
+    padding: 3px;
+    background-color: #ffffff;
+    color: #000;
+    width: 40px;
+    text-align: center;
+  }
+  .brand {
+    text-align: left !important;
+    font-size: 22px;
+    padding-left: 20px;
+    line-height: 50px !important;
+  }
+}
+@media (min-width: 767px) {
+  .nav-side-menu .menu-list .menu-content {
+    display: block;
+  }
+}
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+DashboardTable
+{
+  display:table;
+  width:100%;
+}
+DashboardRow
+{
+  display:table-row;
+}
+DashboardColumn
+{
+  display:table-cell;
+  vertical-align: top;
+}
+
+
+</style>
 <div class="container-fluid">
     <div class="row">
-      <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
-        <ul class="nav nav-pills flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">Overview <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Reports</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Analytics</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Export</a>
-          </li>
-        </ul>
-
-        <ul class="nav nav-pills flex-column">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Nav item</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Nav item again</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">One more nav</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Another nav item</a>
-          </li>
-        </ul>
-
-        <ul class="nav nav-pills flex-column">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Nav item again</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">One more nav</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Another nav item</a>
-          </li>
-        </ul>
-      </nav>
-
-      <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+        <div class="col-md-3 col-xs-1 p-l-0 p-r-0" id="sidebar">
+        <aside>
+            <nav class="navbar navbar-inverse sidebar navbar-fixed-top" role="navigation">
+                <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+          
+          <div class="nav-side-menu">
+              <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+            
+                  <div class="menu-list">
+            
+                      <ul id="menu-content" class="menu-content collapse out">
+                          <li>
+                            <a href="#">
+                            <i class="fa fa-dashboard fa-lg"></i> Link 1
+                            </a>
+                          </li>
+          
+                          <!--
+                            <li  data-toggle="collapse" data-target="#products" class="collapsed active">
+                            <a href="#"><i class="fa fa-gift fa-lg"></i> UI Elements  <i class="fa fa-gift fa-lg btn pull-right" style="margin-top:5px"></i></a>
+                          </li>
+                          <ul class="sub-menu collapse" id="products">
+                              <li class="active"><a href="#">CSS3 Animation</a></li>
+                              <li><a href="#">General</a></li>
+                              <li><a href="#">Buttons</a></li>
+                              <li><a href="#">Tabs & Accordions</a></li>
+                              <li><a href="#">Typography</a></li>
+                              <li><a href="#">FontAwesome</a></li>
+                              <li><a href="#">Slider</a></li>
+                              <li><a href="#">Panels</a></li>
+                              <li><a href="#">Widgets</a></li>
+                              <li><a href="#">Bootstrap Model</a></li>
+                          </ul>
+                        -->
+          
+                          <li data-toggle="collapse" data-target="#service" class="collapsed">
+                            <a href="#"><i class="fa fa-globe fa-lg"></i> Dashboards <span class="arrow"></span></a>
+                          </li>  
+                          <ul class="sub-menu collapse" id="service">
+                            <li>Dashboard 1</li>
+                            <li>Dashboard 2</li>
+                            <li>Dashboard 3</li>
+                          </ul>
+          
+          
+                          <li data-toggle="collapse" data-target="#new" class="collapsed">
+                            <a href="#"><i class="fa fa-car fa-lg"></i> Link 2 <span class="arrow"></span></a>
+                          </li>
+                          <ul class="sub-menu collapse" id="new">
+                            <li>item 1</li>
+                            <li>item 2</li>
+                            <li>item 3</li>
+                          </ul>
+          
+          
+                           <li>
+                            <a href="#">
+                            <i class="fa fa-user fa-lg"></i> Profile
+                            </a>
+                            </li>
+          
+                           <li>
+                            <a href="#">
+                            <i class="fa fa-users fa-lg"></i> Users
+                            </a>
+                          </li>
+                      </ul>
+               </div>
+          </div>
+            </nav>
+            
+          </aside>
+        </div>
+        <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
         <h1>Dashboard</h1>
-
-        <section class="row text-center placeholders">
-          <div class="col-6 col-sm-3 placeholder">
-            <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-            <h4>Label</h4>
-            <div class="text-muted">Something else</div>
-          </div>
-          <div class="col-6 col-sm-3 placeholder">
-            <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-            <h4>Label</h4>
-            <span class="text-muted">Something else</span>
-          </div>
-          <div class="col-6 col-sm-3 placeholder">
-            <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-            <h4>Label</h4>
-            <span class="text-muted">Something else</span>
-          </div>
-          <div class="col-6 col-sm-3 placeholder">
-            <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-            <h4>Label</h4>
-            <span class="text-muted">Something else</span>
-          </div>
-        </section>
-        <section class="row text-center placeholders">
+        <DashboardTable>
+        <!--<section class="row text-center placeholders">-->
+            <DashboardRow>
+              <DashboardColumn>
+                <!--<div class="col-6 col-sm-3 placeholder">-->
+                    <h4><div id="label-profession"></div></h4>
+                  <div id="bar-chart-profession" class="col-sm-6"></div>
+                <!--<img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">-->
+              </DashboardColumn>
+          <!--</div>-->
+              <DashboardColumn>
+              <!--<div class="col-6 col-sm-3 placeholder">-->
+                  <h4><div id="label-profession-target"></div></h4>
+                  <div id="bar-chart-profession-target" class="col-sm-6"></div>
+              <!--<img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">-->
+              <!--</div>-->
+            </DashboardColumn>
+          </DashboardRow>      
+        <!--</section>-->
+        <DashboardRow>
+            <DashboardColumn>
+                <h4><div id="label-specialtyGroup"></div></h4>
+                <div id="bar-chart-specialtyGroup" class="col-sm-6"></div>
+            </DashboardColumn>
+            <DashboardColumn>
+                <h4><div id="label-specialtyGroup-target"></div></h4>
+              <div id="bar-chart-specialtyGroup-target" class="col-sm-6"></div>
+              </DashboardColumn>
+          </DashboardRow>
+        </DashboardTable>
+          <!--
+            <section class="row text-center placeholders">
             <div class="col-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+                <div id="bar-chart-profession-target11" class="col-sm-6"></div>
               <h4>Label</h4>
               <div class="text-muted">Something else</div>
             </div>
             <div class="col-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+              <div id="bar-chart-specialtyGroup-target11" class="col-sm-6"></div>
               <h4>Label</h4>
               <span class="text-muted">Something else</span>
             </div>
           </section>
+        -->
   
-        <h2>Section title</h2>
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-                <th>Header</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1,001</td>
-                <td>Lorem</td>
-                <td>ipsum</td>
-                <td>dolor</td>
-                <td>sit</td>
-              </tr>
-              <tr>
-                <td>1,002</td>
-                <td>amet</td>
-                <td>consectetur</td>
-                <td>adipiscing</td>
-                <td>elit</td>
-              </tr>
-              <tr>
-                <td>1,003</td>
-                <td>Integer</td>
-                <td>nec</td>
-                <td>odio</td>
-                <td>Praesent</td>
-              </tr>
-              <tr>
-                <td>1,003</td>
-                <td>libero</td>
-                <td>Sed</td>
-                <td>cursus</td>
-                <td>ante</td>
-              </tr>
-              <tr>
-                <td>1,004</td>
-                <td>dapibus</td>
-                <td>diam</td>
-                <td>Sed</td>
-                <td>nisi</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </main>
-    </div>
-  </div>
+<script>
+
+var exposureGroup;
+var exposureDim;
+var professionDim;
+
+d3.csv("{{ url_for('static', filename='data/Audience_Dataset.csv')}}").then(function(data) {    
+    //if (error) throw error;
+    data.forEach(function(d) {
+    d["Exposed"] = +d["Exposed"];
+    d["Not exposed"] = +d["Not exposed"];
+    d["Targetable"]=+d["Targetable"];
+  });
+
+    ndx=crossfilter(data);
+
+
+    professionDim               =   ndx.dimension(function(d){return d["MDG PROFESSION"]});
+    professionGroup             =   professionDim.group();
+    ProfessionTargettableGroup  =   professionDim.group();
+
+    //exposureDim                 =   ndx.dimension(function(d){return d["Exposed"]==""?"exposed":"not-exposed"});
+    //exposureGroup               =   exposureDim.group();
+
+    specialtyGrpDim                 =   ndx.dimension(function(d){return d["MDG SPECIALTY GROUP"]});
+    specialtyGrpGroup               =   specialtyGrpDim.group();
+    specialtyGrpTargettableGroup    =   specialtyGrpDim.group();
+
+
+    var reducer = reductio();
+    reducer.exception(function(d){return d.MDG_PSID;}).exceptionCount(true);
+    reducer.value("Exposed").exception(function(d) { return d.MDG_PSID; }).exceptionSum(function(d) { return d["Exposed"]; });
+    reducer.value("NotExposed").exception(function(d) { return d.MDG_PSID; }).exceptionSum(function(d) { return d["Not exposed"]; });
+
+    reducer(professionGroup);
+    reducer(specialtyGrpGroup);
+    
+
+    var reducerTargettable = reductio();
+    reducerTargettable.exception(function(d){return d.MDG_PSID;}).exceptionCount(function(d){if(d.Targetable==1) return d.MDG_PSID;});
+    reducerTargettable.value("Exposed").exception(function(d) { return d.MDG_PSID; }).exceptionSum(function(d) { return d.Targetable === 1 ? d["Exposed"]:0; });
+    reducerTargettable.value("NotExposed").exception(function(d) { return d.MDG_PSID; }).exceptionSum(function(d) { return d.Targetable === 1 ? d["Not exposed"]:0; });
+
+    reducerTargettable(ProfessionTargettableGroup);
+    reducerTargettable(specialtyGrpTargettableGroup);
+    
+    //console.log("------------------ Targettable------------------------");
+    //console.log(ProfessionTargettableGroup.all());
+    //console.log("-------------------------------------------------------");
+
+    //console.log("-----------------------ALL-----------------------------");
+    //console.log(professionGroup.all());
+    //console.log("-------------------------------------------------------");
+
+    //reducer(exposureGroup);
+    ///reducer(professionGroup);
+    
+    //var ExposureRing        = dc.pieChart("#ring-chart-exposure","reductio");
+    //var ProfessionRowChart  = dc.rowChart("#row-chart-profession","reductio");
+    //var selectProfession = dc.selectMenu('#selectProfession',"reductio");
+    //selectProfession
+    //.dimension(professionDim)
+    //.group(professionDim.group())
+    //.controlsUseVisibility(true);
+
+function getTops(source_group,count) {
+    return{
+        all:function()
+        {
+            if (count==0)//Send all groups
+            {
+                return source_group.all();
+            }
+            else
+            {
+                return source_group.top(count);
+            }
+        }
+    };
+}
+
+
+var ProfessionBarChart  = dc.barChart("#bar-chart-profession","reductio");
+var TopProfession = getTops(professionGroup,0);
+ProfessionBarChart
+    .margins({top: 50, right: 20, left: 50, bottom: 50})
+    .width(500)
+    .height(400)
+    .gap(50)
+    .x(d3.scaleBand())
+    .xUnits(dc.units.ordinal)
+    .brushOn(false)
+    .xAxisLabel('Profession')
+    .yAxisLabel('Number of Audience')
+    .dimension(professionDim)
+    .barPadding(0.1)
+    .outerPadding(0.05)
+    .group(TopProfession,"Exposed")
+    
+    .valueAccessor(function(p)
+    {
+        //console.log(p);
+        return p.value.Exposed.exceptionSum;
+    })
+    .title(function(d) 
+    {
+        return d.key + '[' + this.layer + ']: ' + d.value[this.layer].exceptionSum;
+    })
+    .stack(TopProfession, "NotExposed", function (p) 
+    {
+        return p.value.NotExposed.exceptionSum;
+    })
+    .legend(dc.legend().x(100).y(0).itemHeight(13).gap(5))
+    .on("pretransition",function(ProfessionBarChart)
+                        {
+                            //console.log(ProfessionBarChart.yAxis().ticks());
+                            ProfessionBarChart.selectAll("g.stack rect.bar").style("fill", function(d){
+                            //console.log(d);
+                            //console.log(d.layer);
+                            if(d.layer=="Exposed")
+                                return "#3A8DDE";
+                            else
+                                return "#93D500";
+                            });
+                            ProfessionBarChart.selectAll("g.dc-legend-item rect").style("fill", function(d){
+                            //console.log("oooooooo");
+                            //console.log(d);
+                            //console.log("oooooooo");
+                            if(d.name=="Exposed")
+                                return "#3A8DDE";
+                            else
+                                return "#93D500";
+                            });
+                            $("#label-profession").text("Input Audience Profession Exposure (Top 3)");
+                            
+                        });     
+
+
+ProfessionBarChart.yAxis().ticks(5).tickSize(10);
+console.log(ProfessionBarChart.xAxis);
+
+var SpecialtyGroupBarChart  = dc.barChart("#bar-chart-specialtyGroup","reductio");
+var TopSpecialtyGroup = getTops(specialtyGrpGroup,5);
+//console.log(TopSpecialtyGroup.all());
+
+SpecialtyGroupBarChart
+    .margins({top: 50, right: 20, left: 50, bottom: 50})
+    .width(500)
+    .height(400)
+    .gap(50)
+    .x(d3.scaleBand())
+    .xUnits(dc.units.ordinal)
+    .brushOn(false)
+    .xAxisLabel('Specialty Group')
+    .yAxisLabel('Number of Audience')
+    .dimension(specialtyGrpDim)
+    .barPadding(0.1)
+    .outerPadding(0.05)
+    .group(TopSpecialtyGroup,"Exposed")
+    .valueAccessor(function(p)
+    {
+        //console.log(p);
+        return p.value.Exposed.exceptionSum;
+    })
+    .title(function(d) 
+    {
+        return d.key + '[' + this.layer + ']: ' + d.value[this.layer].exceptionSum;
+    })
+    .stack(TopSpecialtyGroup, "NotExposed", function (p) 
+    {
+        return p.value.NotExposed.exceptionSum;
+    })
+    .legend(dc.legend().x(100).y(0).itemHeight(13).gap(5))
+    .on("pretransition",function(SpecialtyGroupBarChart)
+                        {
+                            SpecialtyGroupBarChart.selectAll("g.stack rect.bar").style("fill", function(d){
+                            //console.log(d);
+                            //console.log(d.layer);
+                            if(d.layer=="Exposed")
+                                return "#3A8DDE";
+                            else
+                                return "#93D500";
+                            });
+                            SpecialtyGroupBarChart.selectAll("g.dc-legend-item rect").style("fill", function(d){
+                            //console.log("oooooooo");
+                            //console.log(d);
+                            //console.log("oooooooo");
+                            if(d.name=="Exposed")
+                                return "#3A8DDE";
+                            else
+                                return "#93D500";
+                            });
+                            SpecialtyGroupBarChart.select('path').style({ 'stroke': 'black', 'fill': 'none', 'stroke-width': '1px'}); 
+                            $("#label-specialtyGroup").text("Input Audience Physician Specialty Group Exposure (Top 5)");
+                        });     
+
+
+
+
+var TargettableProfessionGroupBarChart  = dc.barChart("#bar-chart-profession-target","reductio");
+var TopProfessionTargettableGroup = getTops(ProfessionTargettableGroup,3);
+TargettableProfessionGroupBarChart
+    .margins({top: 50, right: 20, left: 50, bottom: 50})
+    .width(500)
+    .height(400)
+    .gap(50)
+    .x(d3.scaleBand())
+    .xUnits(dc.units.ordinal)
+    .brushOn(false)
+    .xAxisLabel('Profession')
+    .yAxisLabel('Number of Audience')
+    .dimension(professionDim)
+    .barPadding(0.1)
+    .outerPadding(0.05)
+    .group(TopProfessionTargettableGroup,"Exposed")
+    .valueAccessor(function(p)
+    {
+        return p.value.Exposed.exceptionSum;
+    })
+    .title(function(d) 
+    {
+        return d.key + '[' + this.layer + ']: ' + d.value[this.layer].exceptionSum;
+    })
+    .stack(TopProfessionTargettableGroup, "NotExposed", function (p) 
+    {
+        return p.value.NotExposed.exceptionSum;
+    })
+    .legend(dc.legend().x(100).y(0).itemHeight(13).gap(5))
+    .on("pretransition",function(TargettableProfessionGroupBarChart)
+                        {
+                            TargettableProfessionGroupBarChart.selectAll("g.stack rect.bar").style("fill", function(d){
+                            //console.log(d);
+                            //console.log(d.layer);
+                            if(d.layer=="Exposed")
+                                return "#3A8DDE";
+                            else
+                                return "#93D500";
+                            });
+                            TargettableProfessionGroupBarChart.selectAll("g.dc-legend-item rect").style("fill", function(d){
+                            //console.log("oooooooo");
+                            //console.log(d);
+                            //console.log("oooooooo");
+                            if(d.name=="Exposed")
+                                return "#3A8DDE";
+                            else
+                                return "#93D500";
+                            });
+                            $("#label-profession-target").text("Targetable Audience Profession Exposure (Top 3)");
+                        }); 
+
+
+
+
+
+
+var TargettableSpecialtyGroupBarChart  = dc.barChart("#bar-chart-specialtyGroup-target","reductio");
+var TopTargettableSpecialtyGroup = getTops(specialtyGrpTargettableGroup,3);
+//console.log(TopSpecialtyGroup.all());
+TargettableSpecialtyGroupBarChart
+    .margins({top: 50, right: 20, left: 50, bottom: 50})
+    .width(500)
+    .height(400)
+    .gap(50)
+    .x(d3.scaleBand())
+    .xUnits(dc.units.ordinal)
+    .brushOn(false)
+    .xAxisLabel('Speciality Group')
+    .yAxisLabel('Number of Audience')
+    .dimension(specialtyGrpDim)
+    .barPadding(0.1)
+    .outerPadding(0.05)
+    .group(TopTargettableSpecialtyGroup,"Exposed")
+    .valueAccessor(function(p)
+    {
+        return p.value.Exposed.exceptionSum;
+    })
+    .title(function(d) 
+    {
+        return d.key + '[' + this.layer + ']: ' + d.value[this.layer].exceptionSum;
+    })
+    .stack(TopTargettableSpecialtyGroup, "NotExposed", function (p) 
+    {
+        return p.value.NotExposed.exceptionSum;
+    })
+    .legend(dc.legend().x(100).y(0).itemHeight(13).gap(5))
+    .on("pretransition",function(TargettableSpecialtyGroupBarChart)
+                        {
+                            TargettableSpecialtyGroupBarChart.selectAll("g.stack rect.bar").style("fill", function(d){
+                            //console.log(d);
+                            //console.log(d.layer);
+                            if(d.layer=="Exposed")
+                                return "#3A8DDE";
+                            else
+                                return "#93D500";
+                            });
+                            TargettableSpecialtyGroupBarChart.selectAll("g.dc-legend-item rect").style("fill", function(d){
+                            //console.log("oooooooo");
+                            //console.log(d);
+                            //console.log("oooooooo");
+                            if(d.name=="Exposed")
+                                return "#3A8DDE";
+                            else
+                                return "#93D500";
+                            });
+                            $("#label-specialtyGroup-target").text("Targetable Audience Physician Specialty Group Exposure (Top 5)");
+                        }); 
+
+
+/*
+    ProfessionBarChart
+    .width(768)
+    .height(480)
+    .x(d3.scale.linear().domain([6,20]))
+    .brushOn(false)
+    .yAxisLabel("This is the Y Axis!")
+    .dimension(professionDim)
+    .group(professionGroupNonDistinct)
+    .valueAccessor(function(p){
+        console.log("ppppppp")
+        console.log(p);
+        console.log(p.value.exceptionCount);
+
+        console.log("ppppppp")
+        return p.value.exceptionCount;
+    })
+    .on('renderlet', function(chart) {
+        chart.selectAll('rect').on("click", function(d) {
+            console.log("click!", d);
+        });
+        
+    });
+    */
+
+
+    /*
+    ExposureRing
+    .width(250).height(250)
+    .dimension(exposureDim)
+    .group(exposureGroup)
+    .legend(dc.legend())
+    .valueAccessor(function (p) {
+            return p.value.exceptionCount;
+        })
+    .innerRadius(60)
+    .label(function(d){
+        var totalCount=0;
+        var label="";
+        for(i=0;i<exposureGroup.all().length;i++)
+        {
+            totalCount=totalCount+exposureGroup.all()[i].value.exceptionCount;
+        }
+        label += d.key + '-' + Math.floor(d.value.exceptionCount / totalCount * 100) + '%';
+        return label;
+        });
+    */
+    /* 
+     ProfessionRowChart
+    .dimension(professionDim)
+    .group(professionGroup)
+    .elasticX(true)
+    .valueAccessor(function (p) {
+            return p.value.exceptionCount;
+        })
+        .labelOffsetX(10)
+    .on('renderlet', function(chart) {
+        chart.selectAll('rect').on("click", function(d) {
+            console.log("click!", d);
+        });
+    });
+    */
+
+    dc.renderAll("reductio");
+});
+
+
+
+    function htmlbodyHeightUpdate(){
+		var height3 = $( window ).height()
+		var height1 = $('.nav').height()+50
+		height2 = $('.main').height()
+		if(height2 > height3){
+			$('html').height(Math.max(height1,height3,height2)+10);
+			$('body').height(Math.max(height1,height3,height2)+10);
+		}
+		else
+		{
+			$('html').height(Math.max(height1,height3,height2));
+			$('body').height(Math.max(height1,height3,height2));
+		}
+		
+	}
+	$(document).ready(function () {
+		htmlbodyHeightUpdate()
+		$( window ).resize(function() {
+			htmlbodyHeightUpdate()
+		});
+		$( window ).scroll(function() {
+			height2 = $('.main').height()
+  			htmlbodyHeightUpdate()
+		});
+	});
+</script>
   {%endblock%}
 
 

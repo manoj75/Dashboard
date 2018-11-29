@@ -5,11 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>HCP Digital Insights</title>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/hcpdigital.css') }}">-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome.min.css') }}">
+    <!--
+    
+    --<link rel="stylesheet" href="{{ url_for('static', filename='css/hcpdigital.css') }}">--
+    
+    <script src="{{ url_for('static', filename='js/jquery-3.1.1.slim.min.js')}}"></script>
+
+    -- IE10 viewport hack for Surface/desktop Windows 8 bug --
+    <script src="{{ url_for('static', filename='js/ie10-viewport-bug-workaround.js')}}"></script>
+  -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">  
+  <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">-->
+  <script src="{{ url_for('static', filename='js/tether.min.js')}}"></script>  
+  <script src="{{ url_for('static', filename='js/jquery-3.1.1.slim.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+    
+  
   </head>
   <body>
     <!-- Navigation -->
@@ -50,11 +65,6 @@
       -->  
         {%endblock%}     
 
-        <script src="{{ url_for('static', filename='js/jquery-3.1.1.slim.min.js')}}"></script>
-  <script src="{{ url_for('static', filename='js/tether.min.js')}}"></script>
-  <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
-  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-  <script src="{{ url_for('static', filename='js/ie10-viewport-bug-workaround.js')}}"></script>
   
   </body>
 </html>
