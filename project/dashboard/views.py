@@ -7,6 +7,10 @@ dashboard_blueprint =   Blueprint(
     template_folder='templates'
 )
 
+@dashboard_blueprint.route("/")
+def Index():
+    return render_template('dashboard/index.html')
+
 @dashboard_blueprint.route("/ProfessionalInsights")
 def ProfessionalInsights():
     return render_template('dashboard/index.html')
