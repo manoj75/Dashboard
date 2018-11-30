@@ -393,3 +393,8 @@ text.barlabel
 {
     font-weight:bold;
 }
+
+.chartTitle
+{
+    text-align: center;
+}
