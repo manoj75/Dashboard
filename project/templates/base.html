@@ -18,13 +18,17 @@
   -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome.min.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}"> 
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"> 
   <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">-->
   <script src="{{ url_for('static', filename='js/tether.min.js')}}"></script>  
   <script src="{{ url_for('static', filename='js/jquery-3.1.1.slim.min.js')}}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/d3.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/crossfilter.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/dc.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/reductio.min.js') }}"></script>
     
-  
   </head>
   <body>
     <!-- Navigation -->
@@ -52,6 +56,82 @@
         
       </div>
     </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-xs-1 p-l-0 p-r-0" id="sidebar">
+            <aside>
+                <nav class="navbar navbar-inverse sidebar navbar-fixed-top" role="navigation">
+                    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+              
+              <div class="nav-side-menu">
+                  <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+                
+                      <div class="menu-list">
+                
+                          <ul id="menu-content" class="menu-content collapse out">
+                              <li>
+                                <a href="#">
+                                <i class="fa fa-dashboard fa-lg"></i> Link 1
+                                </a>
+                              </li>
+              
+                              <!--
+                                <li  data-toggle="collapse" data-target="#products" class="collapsed active">
+                                <a href="#"><i class="fa fa-gift fa-lg"></i> UI Elements  <i class="fa fa-gift fa-lg btn pull-right" style="margin-top:5px"></i></a>
+                              </li>
+                              <ul class="sub-menu collapse" id="products">
+                                  <li class="active"><a href="#">CSS3 Animation</a></li>
+                                  <li><a href="#">General</a></li>
+                                  <li><a href="#">Buttons</a></li>
+                                  <li><a href="#">Tabs & Accordions</a></li>
+                                  <li><a href="#">Typography</a></li>
+                                  <li><a href="#">FontAwesome</a></li>
+                                  <li><a href="#">Slider</a></li>
+                                  <li><a href="#">Panels</a></li>
+                                  <li><a href="#">Widgets</a></li>
+                                  <li><a href="#">Bootstrap Model</a></li>
+                              </ul>
+                            -->
+              
+                              <li data-toggle="collapse" data-target="#service" class="collapsed">
+                                <a href="#"><i class="fa fa-globe fa-lg"></i> Dashboards <span class="arrow"></span></a>
+                              </li>  
+                              <ul class="sub-menu collapse" id="service">
+                                    <li><a href="{{url_for('dashboard.DeviceTypes')}}">Device Types</a></li>
+                                    <li><a href="{{url_for('dashboard.ProfessionalInsights')}}">Professional Insights</a></li>
+                                    <li><a href="{{url_for('dashboard.ContentInsights')}}">Content Insights</a></li>
+                                  </ul>
+                  
+              
+                              <li data-toggle="collapse" data-target="#new" class="collapsed">
+                                <a href="#"><i class="fa fa-car fa-lg"></i> Link 2 <span class="arrow"></span></a>
+                              </li>
+                              <ul class="sub-menu collapse" id="new">
+                                <li>item 1</li>
+                                <li>item 2</li>
+                                <li>item 3</li>
+                              </ul>
+              
+              
+                               <li>
+                                <a href="#">
+                                <i class="fa fa-user fa-lg"></i> Profile
+                                </a>
+                                </li>
+              
+                               <li>
+                                <a href="#">
+                                <i class="fa fa-users fa-lg"></i> Users
+                                </a>
+                              </li>
+                          </ul>
+                   </div>
+              </div>
+                </nav>
+                
+              </aside>
+            </div>
+    
     <!-- Page Content -->
       {%block content%}
       {%endblock%}

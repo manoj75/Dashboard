@@ -7,10 +7,14 @@ dashboard_blueprint =   Blueprint(
     template_folder='templates'
 )
 
-@dashboard_blueprint.route("/sample1")
-def sample1():
+@dashboard_blueprint.route("/ProfessionalInsights")
+def ProfessionalInsights():
     return render_template('dashboard/index.html')
 
-@dashboard_blueprint.route("/sample2")
-def sample2():
-    return render_template('dashboard/dashboard2.html')
+@dashboard_blueprint.route("/ContentInsights")
+def ContentInsights():
+    return render_template('dashboard/ContentInsights.html')
+
+@dashboard_blueprint.route("/DeviceTypes")
+def DeviceTypes():
+    return render_template('dashboard/DeviceType.html')
