@@ -398,3 +398,14 @@ text.barlabel
 {
     text-align: center;
 }
+
+
+.report-container{
+  border: 2px dashed #000000;
+  height: 500px;
+  
+  }
+  
+  .report-containe iframe{
+      border: none;
+  }

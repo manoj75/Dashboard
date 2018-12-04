@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+<h1>Professional Insights</h1>
+    <DashboardTable>
+        <DashboardRow>
+            <DashboardColumn>
+                <div style="padding:5px">
+                    <select id="county">
+                        <option value="ADA COUNTY">ADA COUNTY</option>
+                        <option value="ADAIR COUNTY">ADAIR COUNTY</option>
+                        <option value="ADAMS COUNTY">ADAMS COUNTY</option>
+                        <option value="ADDISON COUNTY">ADDISON COUNTY</option>
+                    </select>
+                </div>
+            </DashboardColumn>
+        </DashboardRow>
+        <DashboardRow>
+            <DashboardColumn>
+                <div class="report-container" id="mainReportContainer"></div>
+            </DashboardColumn>
+        </DashboardRow>
+    </DashboardTable>
+</main>        
+
+<script>
+var config = JSON.parse('{{ configObj|safe }}');  
+var reportid=config.reportid;
+var reporturl=config.embedurl;
+var token=config.token;
+console.log("pppppppppppppppppp");
+console.log(reportid);
+console.log(reporturl);
+console.log(token);
+console.log("pppppppppppppppppp");
+
+/*
+var  IamAFilter = {
+                    $schema: "http://powerbi.com/product/schema#basic",
+                    target: 
+                    {
+                        table: "Audience_Dataset",
+                        column: "MDG Region"
+                    },
+                    operator: "Is",
+                    value: "Mid Atlantic"
+                }
+                console.log(IamAFilter);
+*/
+//var $reportContainer = $('#mainReportContainer');
+//var report = powerbi.embed($reportContainer.get(0), embedConfiguration);
+//console.log(report);
+//report.getFilters().then(function(filters) {
+//    console.log("hhhhh"); 
+//    console.log(filters);
+// });
+
+
+    window.onload = function () 
+    { 
+        var models = window['powerbi-client'].models;
+        console.log(models);
+        var $reportContainer = $('#mainReportContainer');
+        var Filter1 = {
+            $schema: "http://powerbi.com/product/schema#basic",
+            target: {
+                    table: "Audience_Dataset",
+                    column: "MDG Region"
+            },
+            operator: "Is",
+            value:"North East",
+            
+            }
+
+        var embedConfiguration = {
+                    type: 'report',
+                    id: reportid,
+                    embedUrl: reporturl,
+                    tokenType: models.TokenType.Embed,
+                    accessToken: token,
+                    settings: 
+                    {
+                        filterPaneEnabled: true //hide the filterPane so that your user can't change the filter to see more data, this is not a strong security, anyone who's familar with javascript can bypass it
+                    }
+                };
+                report= powerbi.embed($reportContainer.get(0), embedConfiguration);
+
+
+$('select').on('change', function() {
+  //alert( this.value );
+  filter(this.value);
+});
+
+/*report.on('loaded', event => {
+    console.log("report loaded");  
+    report.getFilters()
+        .then(filters => {
+          filters.push(basicFilter);
+          console.log(filters); 
+          report.setFilters(filters);
+        });
+    });
+
+*/
+
+function filter(value) {
+    const basicFilter = {
+                        $schema: "http://powerbi.com/product/schema#advanced",
+                        target: {
+                            table: "Audience_Dataset",
+                            column: "MDG COUNTY"
+                        },
+                        logicalOperator:"And",
+                        conditions: [{
+                                        operator: "Is",
+                                        value: value
+                                    }],
+                        filterType: models.FilterType.AdvancedFilter
+                    }
+            var report = powerbi.embeds[0];
+            if (report) {
+                report.setFilters([basicFilter]);
+                /*report.getFilters()
+                .then(filters => {
+                    filters.push(basicFilter);
+                        console.log(filters); 
+                    report.setFilters(filters);
+                });*/
+
+                /*report.setFilters([basicFilter])
+                    .then(function (result) {
+                        console.log("2222");
+                        console.log(result);
+                    })
+                    .catch(function (errors) {
+                        console.log("11111");
+                        console.log(errors);
+                    });*/
+            }
+        }
+
+
+
+
+
+}
+
+
+</script>
+  {%endblock%}
+
+
+ 

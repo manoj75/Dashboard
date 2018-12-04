@@ -25,8 +25,19 @@
               </DashboardColumn>
           </DashboardRow>
         </DashboardTable>
+        <div id="bar-chart-specialtyGroup-target" class="col-sm-6"></div>
+        
 <script>
+var config = JSON.parse('{{ configObj|safe }}');  
+var reportid=config.reportid;
+var reporturl=config.embedurl;
+var token=config.token;
+console.log("pppppppppppppppppp");
+console.log(reportid);
+console.log(reporturl);
+console.log(token);
 
+console.log("pppppppppppppppppp");
 var exposureGroup;
 var exposureDim;
 var professionDim;
