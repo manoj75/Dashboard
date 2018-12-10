@@ -59,8 +59,8 @@ def Index():
 @dashboard_blueprint.route("/pbi")
 def Pbi():
     resource_url = 'https://analysis.windows.net/powerbi/api'
-    username='Bill.Reinstein@HCPdigitalinsights.com'
-    password='Bilso1520'
+    username='***'
+    password='***'
 
     client_id='4e4bf593-32b5-4d99-a860-bb26cdb0e2f7'
     AuthContext= adal.AuthenticationContext("https://login.windows.net/common")
