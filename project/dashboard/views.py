@@ -1,5 +1,5 @@
 from flask import Blueprint,render_template, redirect,url_for,request,flash
-from project.models import User 
+from project.models import User ,Profession
 import json
 import requests
 import adal
@@ -13,8 +13,8 @@ dashboard_blueprint =   Blueprint(
 @dashboard_blueprint.route("/")
 def Index():
     resource_url = 'https://analysis.windows.net/powerbi/api'
-    username='****'
-    password='***'
+    username='bill.reinstein@hcpdigitalinsights.com'
+    password='Bilso1520'
 
     client_id='4e4bf593-32b5-4d99-a860-bb26cdb0e2f7'
     AuthContext= adal.AuthenticationContext("https://login.windows.net/common")
@@ -54,14 +54,16 @@ def Index():
     #print(response.json()["value"][0].webUrl)
     #r = requests.post(url=api_url, json=create_row_data)
     #print(r.status_code, r.reason, r.text)
+    profession=Profession.query.all()
     return render_template('dashboard/index.html',configObj=json.dumps(configObj))
 
 @dashboard_blueprint.route("/pbi")
 def Pbi():
     resource_url = 'https://analysis.windows.net/powerbi/api'
-    username='***'
-    password='***'
-
+    username='bill.reinstein@hcpdigitalinsights.com'
+    password='Bilso1520'
+    profession=Profession.query.all()
+    print(profession)
     client_id='4e4bf593-32b5-4d99-a860-bb26cdb0e2f7'
     AuthContext= adal.AuthenticationContext("https://login.windows.net/common")
     token=AuthContext.acquire_token_with_username_password(resource_url,username,password,client_id)
@@ -100,7 +102,7 @@ def Pbi():
     #print(response.json()["value"][0].webUrl)
     #r = requests.post(url=api_url, json=create_row_data)
     #print(r.status_code, r.reason, r.text)
-    return render_template('dashboard/Pbi.html',configObj=json.dumps(configObj))
+    return render_template('dashboard/Pbi.html',profession=profession,configObj=json.dumps(configObj))
 
 
 @dashboard_blueprint.route("/ProfessionalInsights")

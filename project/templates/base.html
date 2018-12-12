@@ -32,7 +32,9 @@
     
   </head>
   <body>
+    
     <!-- Navigation -->
+    
     <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
       <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -104,23 +106,31 @@
                                   </select>
                                 </li>
                                 <li>                                  
-                                    Filter 2:
-                                    <select id="ddfilter2">
-                                    <option value="ADA COUNTY">Filter Value1</option>
-                                    <option value="ADAIR COUNTY">Filter Value2</option>
-                                    <option value="ADAMS COUNTY">Filter Value3</option>
-                                    <option value="ADDISON COUNTY">Filter Value4</option>
+                                    Professions:
+                                    <select id="ddprofession">
+                                        {% for profession in professions %}
+                                        <option value="{{ profession.id }}" >{{ profession.name}}</option>
+                                        {% endfor %}
+                                      </select>
+                                </li>
+                                <li>                                    
+                                  Specialty Groups:
+                                    <select id="ddspecialtyGroup">
+                                        specialtyGroups
+                                      {% for specialtyGroup in specialtyGroups %}
+                                      <option value="{{ specialtyGroup.id }}" >{{ specialtyGroup.name}}</option>
+                                      {% endfor %}
                                     </select>
                                 </li>
                                 <li>                                    
-                                  Filter 3:
-                                    <select id="ddfilter3">
-                                    <option value="ADA COUNTY">Filter Value1</option>
-                                    <option value="ADAIR COUNTY">Filter Value2</option>
-                                    <option value="ADAMS COUNTY">Filter Value3</option>
-                                    <option value="ADDISON COUNTY">Filter Value4</option>
-                                    </select>
-                                </li>
+                                    Regions:
+                                      <select id="ddGeoRegion">
+                                          
+                                        {% for region in geoRegions %}
+                                        <option value="{{ region.id }}" >{{ region.name}}</option>
+                                        {% endfor %}
+                                      </select>
+                                  </li>
                               </ul>
                                <li>
                                 <a href="#">
@@ -151,7 +161,7 @@
                 
               </aside>
             </div>
-    
+    ppp={{model}}
     <!-- Page Content -->
       {%block content%}
       {%endblock%}
