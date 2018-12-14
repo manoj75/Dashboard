@@ -43,3 +43,14 @@ class GeoRegions(db.Model):
     def __init__(self, name, campaignid):
         self.name = name
         self.campaignId = campaignid                        
+
+class Segment(db.Model):
+    __tablename__ = 'Segment'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text)
+    campaignId = db.Column(db.Integer)
+
+    def __init__(self, name, campaignid):
+        self.name = name
+        self.campaignId = campaignid                        

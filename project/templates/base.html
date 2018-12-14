@@ -29,7 +29,26 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/dc.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/reductio.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/powerbi.min.js') }}"></script>
+    <!--
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    -->
+    <link href="https://harvesthq.github.io/chosen/chosen.css" rel="stylesheet" />
+    <script src="https://harvesthq.github.io/chosen/chosen.jquery.js"></script>
+
     
+    <script>
+        $(document).ready(function() {
+
+          //console.log($('#ddSegment'));
+          //$('#ddSegment').select2();
+          $(".chosen-select").chosen({no_results_text: "Oops, nothing found!"}); 
+      });
+      $(document).ready(function() {
+      //$('.mdb-select').materialSelect();
+    });
+        </script>
+      
   </head>
   <body>
     
@@ -97,39 +116,47 @@
                               </li>
                               <ul class="sub-menu collapse" id="new">
                                 <li>                    
-                                  Filter 1:
-                                  <select id="county">
-                                  <option value="ADA COUNTY">ADA COUNTY</option>
-                                  <option value="ADAIR COUNTY">ADAIR COUNTY</option>
-                                  <option value="ADAMS COUNTY">ADAMS COUNTY</option>
-                                  <option value="ADDISON COUNTY">ADDISON COUNTY</option>
-                                  </select>
+                                  Segment:
+                                  <!--<select id="ddSegment">-->
+                                  <!--<select class="js-example-basic-multiple" id="ddSegment" multiple="multiple">-->
+                                    <!--<select class="mdb-select md-form colorful-select dropdown-primary" multiple searchable="Search here..">-->
+                                      <!--
+                                        <select data-placeholder="Choose a country..." multiple class="chosen-select11">
+                                      {% for segment in segments %}
+                                      <option value="{{ segment.id }}" >{{ segment.name}}</option>
+                                      {% endfor %}
+                                      </select>
+                                    -->
                                 </li>
                                 <li>                                  
-                                    Professions:
-                                    <select id="ddprofession">
+                                  <!--  
+                                  Professions:
+                                    <select id="ddprofession1">
                                         {% for profession in professions %}
                                         <option value="{{ profession.id }}" >{{ profession.name}}</option>
                                         {% endfor %}
                                       </select>
+                                    -->
                                 </li>
-                                <li>                                    
+                                <li>
+                                  <!--                                    
                                   Specialty Groups:
-                                    <select id="ddspecialtyGroup">
-                                        specialtyGroups
+                                    <select id="ddspecialtyGroup1">
                                       {% for specialtyGroup in specialtyGroups %}
                                       <option value="{{ specialtyGroup.id }}" >{{ specialtyGroup.name}}</option>
                                       {% endfor %}
                                     </select>
+                                  -->
                                 </li>
-                                <li>                                    
+                                <li> 
+                                  <!--                                   
                                     Regions:
-                                      <select id="ddGeoRegion">
-                                          
+                                      <select id="ddGeoRegion1">
                                         {% for region in geoRegions %}
                                         <option value="{{ region.id }}" >{{ region.name}}</option>
                                         {% endfor %}
                                       </select>
+                                    -->
                                   </li>
                               </ul>
                                <li>
@@ -162,6 +189,7 @@
               </aside>
             </div>
     ppp={{model}}
+
     <!-- Page Content -->
       {%block content%}
       {%endblock%}
@@ -175,6 +203,5 @@
       -->  
         {%endblock%}     
 
-  
   </body>
 </html>

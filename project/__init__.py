@@ -18,7 +18,7 @@ migrate = Migrate(app, db)
 # import a blueprint that we will create
 from project.users.views import users_blueprint
 from project.dashboard.views import dashboard_blueprint
-from project.models import Profession,SpecialtyGroup,GeoRegions
+from project.models import Profession,SpecialtyGroup,GeoRegions,Segment
 
 # register our blueprints with the application
 app.register_blueprint(users_blueprint, url_prefix='/users')
@@ -30,7 +30,8 @@ def filters():
     professions=Profession.query.all()
     specialtyGroups=SpecialtyGroup.query.all()
     geoRegions=GeoRegions.query.all()
-    return dict(professions=professions,specialtyGroups=specialtyGroups,geoRegions=geoRegions)
+    Segments=Segment.query.all()
+    return dict(segments=Segments,professions=professions,specialtyGroups=specialtyGroups,geoRegions=geoRegions)
 
 @app.route('/')
 def root():

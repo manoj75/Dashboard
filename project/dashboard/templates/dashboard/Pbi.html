@@ -6,16 +6,50 @@
     <DashboardTable>
         <DashboardRow>
             <DashboardColumn>
-                <div style="padding:8px">
-                    <!--
-                        <select id="county">
-                        <option value="ADA COUNTY">ADA COUNTY</option>
-                        <option value="ADAIR COUNTY">ADAIR COUNTY</option>
-                        <option value="ADAMS COUNTY">ADAMS COUNTY</option>
-                        <option value="ADDISON COUNTY">ADDISON COUNTY</option>
-                    </select>
-                -->
+                <div style="padding:8px" class="filterRow">
+                <div class="filterColumn">    
+                    <div>
+                        Segment:
+                    </div>
+                    <div>    
+                        <select id="ddSegment" data-placeholder="Choose a segment..." multiple class="chosen-select">
+                            {% for segment in segments %}
+                            <option value="{{ segment.id }}" >{{ segment.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>    
+                <div class="filterColumn">
+                    <div>Profession:</div>
+                    <div>
+                        <select id="ddProfession" data-placeholder="Choose a Profession..." multiple class="chosen-select">
+                            {% for profession in professions %}
+                            <option value="{{ profession.id }}" >{{ profession.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>    
                 </div>
+                <div class="filterColumn">
+                    <div>Region:</div>
+                    <div>
+                        <select id="ddRegion" data-placeholder="Choose a Region..." multiple class="chosen-select">
+                                {% for region in geoRegions %}
+                            <option value="{{ region.id }}" >{{ region.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="filterColumn">
+                    <div>Specialty:</div>
+                    <div>
+                        <select id="ddSpecialtyGroup" data-placeholder="Choose a Specialty..." multiple class="chosen-select">
+                                {% for specialtyGroup in specialtyGroups %}
+                            <option value="{{ specialtyGroup.id }}" >{{ specialtyGroup.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>        
+                </div>
+            </div>
             </DashboardColumn>
         </DashboardRow>
         <DashboardRow>
@@ -31,39 +65,12 @@ var config = JSON.parse('{{ configObj|safe }}');
 var reportid=config.reportid;
 var reporturl=config.embedurl;
 var token=config.token;
-console.log("pppppppppppppppppp");
-console.log(reportid);
-console.log(reporturl);
-console.log(token);
-console.log("pppppppppppppppppp");
-
-/*
-var  IamAFilter = {
-                    $schema: "http://powerbi.com/product/schema#basic",
-                    target: 
-                    {
-                        table: "Audience_Dataset",
-                        column: "MDG Region"
-                    },
-                    operator: "Is",
-                    value: "Mid Atlantic"
-                }
-                console.log(IamAFilter);
-*/
-//var $reportContainer = $('#mainReportContainer');
-//var report = powerbi.embed($reportContainer.get(0), embedConfiguration);
-//console.log(report);
-//report.getFilters().then(function(filters) {
-//    console.log("hhhhh"); 
-//    console.log(filters);
-// });
-
 
     window.onload = function () 
     { 
-        console.log('{{profession}}');
+        //console.log('{{profession}}');
         var models = window['powerbi-client'].models;
-        console.log(models);
+        //console.log(models);
         var $reportContainer = $('#mainReportContainer');
         var Filter1 = {
             $schema: "http://powerbi.com/product/schema#basic",
@@ -84,46 +91,47 @@ var  IamAFilter = {
                     accessToken: token,
                     settings: 
                     {
-                        filterPaneEnabled: true //hide the filterPane so that your user can't change the filter to see more data, this is not a strong security, anyone who's familar with javascript can bypass it
+                        filterPaneEnabled: true, //hide the filterPane so that your user can't change the filter to see more data, this is not a strong security, anyone who's familar with javascript can bypass it
+                        navContentPaneEnabled: false
                     }
                 };
                 report= powerbi.embed($reportContainer.get(0), embedConfiguration);
 
-
+var filters=[];
+var SelectTexts=[];
 $('select').on('change', function() {
   //alert( this.value );
-  filter(this.value);
-});
-
-/*report.on('loaded', event => {
-    console.log("report loaded");  
-    report.getFilters()
-        .then(filters => {
-          filters.push(basicFilter);
-          console.log(filters); 
-          report.setFilters(filters);
-        });
-    });
-
-*/
-
-function filter(value) {
-    const basicFilter = {
-                        $schema: "http://powerbi.com/product/schema#advanced",
-                        target: {
-                            table: "Audience_Dataset",
-                            column: "MDG COUNTY"
-                        },
-                        logicalOperator:"And",
-                        conditions: [{
-                                        operator: "Is",
-                                        value: value
-                                    }],
-                        filterType: models.FilterType.AdvancedFilter
-                    }
-            var report = powerbi.embeds[0];
-            if (report) {
-                report.setFilters([basicFilter]);
+  var filter;
+  console.log("-------------------");  
+  var id; 
+  filters.length=0; 
+  $('select').each(function()
+  {
+    id=this.id;
+    values=$("#"+id).chosen().val();
+    if(values.length>0)
+    {
+        textObjs=[];
+        console.log(values);
+        for(var val in values)
+        {
+            console.log("ivalue="+values[val]);
+            text=$("#"+id+" option[value='"+values[val]+"']").text();
+            textObjs.push(text);
+        }
+        console.log("text="+textObjs);
+        filter=getFilter(getColumnName(id),textObjs)
+        console.log(filter);
+        filters.push(filter);
+        
+    }
+    //SelectTexts.length=0;
+  })
+  console.log(filters);
+  console.log("-------------------");
+  var report = powerbi.embeds[0];
+  if (report) {
+                report.setFilters(filters);
                 /*report.getFilters()
                 .then(filters => {
                     filters.push(basicFilter);
@@ -141,9 +149,95 @@ function filter(value) {
                         console.log(errors);
                     });*/
             }
+
+});
+
+/*report.on('loaded', event => {
+    console.log("report loaded");  
+    report.getFilters()
+        .then(filters => {
+          filters.push(basicFilter);
+          console.log(filters); 
+          report.setFilters(filters);
+        });
+    });
+
+*/
+var getColumnName=function(id,values)
+{
+    var colName="";
+    if (id=="ddSpecialtyGroup")
+    {
+        colName="MDG SPECIALTY GROUP"
+    }
+    if (id=="ddRegion")
+    {
+        colName="MDG Region"
+    }
+    if (id=="ddProfession")
+    {
+        colName="MDG PROFESSION"
+    }    
+    if (id=="ddSegment")
+    {
+        colName="Segment"
+    }    
+    return colName;
+}
+
+function getFilter(colName,colValues) {
+    var basicFilter = {
+                        $schema: "http://powerbi.com/product/schema#advanced",
+                        target: {
+                            table: "Audience_Dataset",
+                            //column: "MDG COUNTY"
+                            column: colName
+                        },
+                        //logicalOperator:"Or",
+                        operator: "In",
+                        values:colValues,
+                        filterType: models.FilterType.basicFilter
+                    }
+        return basicFilter;            
         }
 
+/*function filter(colName,values) {
+    const basicFilter = {
+                        $schema: "http://powerbi.com/product/schema#advanced",
+                        target: {
+                            table: "Audience_Dataset",
+                            //column: "MDG COUNTY"
+                            column: colName
+                        },
+                        //logicalOperator:"Or",
+                        conditions: [{
+                                        operator: "Is",
+                                        value: value
+                                    }],
+                        filterType: models.FilterType.AdvancedFilter
+                    }
+            var report = powerbi.embeds[0];
+            if (report) {
+                report.setFilters([basicFilter]);
+                *report.getFilters()
+                .then(filters => {
+                    filters.push(basicFilter);
+                        console.log(filters); 
+                    report.setFilters(filters);
+                });*
 
+                *report.setFilters([basicFilter])
+                    .then(function (result) {
+                        console.log("2222");
+                        console.log(result);
+                    })
+                    .catch(function (errors) {
+                        console.log("11111");
+                        console.log(errors);
+                    });*
+            }
+        }
+    */
 
 
 

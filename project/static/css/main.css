@@ -409,3 +409,15 @@ text.barlabel
   .report-containe iframe{
       border: none;
   }
+
+  .filterRow
+  {
+    display: table-row;
+  } 
+  .filterColumn
+  {
+    display: table-cell;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+  }
