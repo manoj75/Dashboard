@@ -1,15 +1,37 @@
 from project import db
+from flask_login import UserMixin
+from sqlalchemy.orm import relationship, backref
 
-class User(db.Model):
+class User(UserMixin,db.Model):
     __tablename__ = 'users'
+    id          =   db.Column(db.Integer, primary_key=True)
+    username    =   db.Column(db.String(15), unique=True)
+    email       =   db.Column(db.String(50), unique=True)
+    password    =   db.Column(db.String(80))
+    first_name  =   db.Column(db.String(80))
+    last_name  =   db.Column(db.String(80))
+    customerid  =   db.Column(db.Integer)
 
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.Text)
-    last_name = db.Column(db.Text)
+    #customer    =   db.relationship("Customer")
 
-    def __init__(self, first_name, last_name):
-        self.first_name = first_name
-        self.last_name = last_name
+    def __init__(self, username, email,password,customerid,firstname,lastname):
+        self.username = username
+        self.email = email
+        self.password=password
+        self.first_name=firstname
+        self.last_name=lastname
+        self.customerid=customerid
+
+class Customer(db.Model):
+    __tablename__ = 'Customers'
+
+    id      = db.Column(db.Integer, primary_key=True)
+    name    = db.Column(db.Text)
+    #user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __init__(self, name):
+        self.name = name
+
 
 class Profession(db.Model):
     __tablename__ = 'Profession'
@@ -54,3 +76,4 @@ class Segment(db.Model):
     def __init__(self, name, campaignid):
         self.name = name
         self.campaignId = campaignid                        
+

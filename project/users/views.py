@@ -12,6 +12,6 @@ users_blueprint =   Blueprint(
 def hello():
     return "HCPDigitalInsights!"
 
-@users_blueprint.route('/login')
-def login():
-    return render_template('users/login.html')    
+#@users_blueprint.route('/login')
+#def login():
+#    return render_template('users/login.html')    

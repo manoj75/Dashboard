@@ -61,6 +61,16 @@
 </main>        
 
 <script>
+        $(document).ready(function() {
+
+          //console.log($('#ddSegment'));
+          //$('#ddSegment').select2();
+          $(".chosen-select").chosen({no_results_text: "Oops, nothing found!"}); 
+      });
+      $(document).ready(function() {
+      //$('.mdb-select').materialSelect();
+    });
+
 var config = JSON.parse('{{ configObj|safe }}');  
 var reportid=config.reportid;
 var reporturl=config.embedurl;
@@ -75,7 +85,7 @@ var token=config.token;
         var Filter1 = {
             $schema: "http://powerbi.com/product/schema#basic",
             target: {
-                    table: "Audience_Dataset",
+                    table: "Audience",
                     column: "MDG Region"
             },
             operator: "Is",
@@ -189,7 +199,7 @@ function getFilter(colName,colValues) {
     var basicFilter = {
                         $schema: "http://powerbi.com/product/schema#advanced",
                         target: {
-                            table: "Audience_Dataset",
+                            table: "Audience",
                             //column: "MDG COUNTY"
                             column: colName
                         },
