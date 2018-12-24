@@ -36,18 +36,18 @@ app.register_blueprint(dashboard_blueprint, url_prefix='/dashboard')
 app.register_blueprint(login_blueprint, url_prefix='/login')
 app.register_blueprint(admin_blueprint,url_prefix='/admin')
 
-@app.context_processor
-def filters():
-    professions=Profession.query.all()
-    specialtyGroups=SpecialtyGroup.query.all()
-    geoRegions=GeoRegions.query.all()
-    Segments=Segment.query.all()
-    print("--------------------------")
-    print(current_user)
-    customerName=Customer.query.get(current_user.customerid).name
-    print("Customer Name="+customerName)
-    print("--------------------------")
-    return dict(customer_name=customerName,segments=Segments,professions=professions,specialtyGroups=specialtyGroups,geoRegions=geoRegions)
+#@app.context_processor
+#def filters():
+#    professions=Profession.query.all()
+#    specialtyGroups=SpecialtyGroup.query.all()
+#    geoRegions=GeoRegions.query.all()
+#    Segments=Segment.query.all()
+#    print("--------------------------")
+#    print(current_user)
+#    customerName=Customer.query.get(current_user.customerid).name
+#    print("Customer Name="+customerName)
+#    print("--------------------------")
+#    return dict(customer_name=customerName,segments=Segments,professions=professions,specialtyGroups=specialtyGroups,geoRegions=geoRegions)
 
 @app.route('/')
 def root():
