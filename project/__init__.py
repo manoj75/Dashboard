@@ -3,7 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_modus import Modus
 from flask_migrate import Migrate
-import pyodbc
+#import pyodbc
 import urllib.parse 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
