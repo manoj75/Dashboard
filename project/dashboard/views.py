@@ -2,6 +2,7 @@ import json
 import requests
 import adal
 import re
+import os
 from project.models import User ,Profession
 from flask import Blueprint,render_template, redirect,url_for,request,flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -63,13 +64,15 @@ def Index():
 def Campaign(id):
     campaignId=id
     resource_url = 'https://analysis.windows.net/powerbi/api'
-    username='***'
-    password='***'
+    #username='***'
+    #password='***'
+    PbiUserID       = os.environ['PbiUserID']
+    PbiPassword     = os.environ['PbiPassword']
     print(current_user)
     profession=Profession.query.all()
     client_id='4e4bf593-32b5-4d99-a860-bb26cdb0e2f7'
     AuthContext= adal.AuthenticationContext("https://login.windows.net/common")
-    token=AuthContext.acquire_token_with_username_password(resource_url,username,password,client_id)
+    token=AuthContext.acquire_token_with_username_password(resource_url,PbiUserID,PbiPassword,client_id)
     accessToken=token["accessToken"]
     url="https://api.powerbi.com/v1.0/myorg/groups/42b9d168-fefb-4b3c-aa2d-af24fb08f4d8/reports"
     headers = {'Authorization': 'Bearer ' + accessToken,'Content-type': 'application/json', 'Accept': 'application/json'}

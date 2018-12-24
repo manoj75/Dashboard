@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_modus import Modus
@@ -8,7 +9,13 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 
 app = Flask(__name__)
 modus = Modus(app)
-params = urllib.parse.quote_plus("DRIVER={SQL Server};SERVER=***;DATABASE=***;UID=hcpdigital;PWD=****")
+DBServer   = os.environ['DBServer']
+DataBase    = os.environ['DataBase']
+DBUserID    = os.environ['DBUserID']
+DBPassword  = os.environ['DBPassword']
+
+
+params = urllib.parse.quote_plus("DRIVER={SQL Server};SERVER="+DBServer+";DATABASE="+DataBase+";UID="+DBUserID+";PWD="+DBPassword)
 app.config['SQLALCHEMY_DATABASE_URI'] = "mssql+pyodbc:///?odbc_connect=%s" % params
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "THIS SHOULD BE HIDDEN!"
